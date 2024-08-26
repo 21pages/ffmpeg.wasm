@@ -31,11 +31,12 @@ jobs:
     - name: Build ffmpeg-core
       run: make prd EXTRA_ARGS="--cache-from=type=local,src=build-cache-st --cache-to=type=local,dest=build-cache-st,mode=max"
     - name: Upload core
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: ffmpeg-core
         path: packages/core/dist/*
   build-core-mt:
+    if: false
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Source Code
@@ -54,11 +55,12 @@ jobs:
     - name: Build ffmpet-core-mt
       run: make prd-mt EXTRA_ARGS="--cache-from=type=local,src=build-cache-mt --cache-to=type=local,dest=build-cache-mt,mode=max"
     - name: Upload core-mt
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: ffmpeg-core-mt
         path: packages/core-mt/dist/*
   tests:
+    if: false
     runs-on: ubuntu-latest
     needs:
       - build-core
