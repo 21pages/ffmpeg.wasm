@@ -25,6 +25,38 @@ CONF_FLAGS=(
   --extra-cflags="$CFLAGS"
   --extra-cxxflags="$CXXFLAGS"
 
+  --disable-everything
+  --disable-htmlpages
+  --disable-manpages
+  --disable-podpages
+  --disable-txtpages
+  --disable-network
+  --disable-appkit
+  --disable-coreimage
+  --disable-metal
+  --disable-sdl2
+  --disable-securetransport
+  --disable-vulkan
+  --disable-audiotoolbox
+  --disable-v4l2-m2m
+  --disable-valgrind-backtrace
+  --disable-large-tests
+  
+  --disable-avdevice
+  --disable-avformat
+  --disable-avfilter
+  --disable-swresample
+  --disable-postproc
+  --enable-avcodec
+  --enable-swscale
+  --enable-decoder=h264
+  --enable-decoder=hevc
+  --enable-decoder=vp8
+  --enable-decoder=vp9
+
+  --enable-libaom
+  --enable-decoder=libaom_av1
+
   # disable thread when FFMPEG_ST is NOT defined
   ${FFMPEG_ST:+ --disable-pthreads --disable-w32threads --disable-os2threads}
 )

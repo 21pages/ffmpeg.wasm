@@ -13,6 +13,10 @@ CM_FLAGS=(
   -DENABLE_TOOLS=0                              # disable tools
   -DCONFIG_RUNTIME_CPU_DETECT=0                 # disable cpu detect
   -DCONFIG_WEBM_IO=0                            # disable libwebm support
+  -DCMAKE_BUILD_TYPE=MinSizeRel
+  -DCONFIG_AV1_DECODER=1
+  -DCONFIG_AV1_ENCODER=0
+  -DCONFIG_LIBYUV=0
 )
 
 CMBUILD_DIR=cmbuild

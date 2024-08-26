@@ -1,0 +1,6 @@
+[
+    "_malloc",
+    "_free",
+    "_ffmpeg_destroy_decoder",
+    "_ffmpeg_decode"
+]
