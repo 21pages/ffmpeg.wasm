@@ -20,16 +20,27 @@ ENV FFMPEG_MT=$FFMPEG_MT
 RUN apt-get update && \
       apt-get install -y pkg-config autoconf automake libtool ragel
 
+# Build aom
+FROM emsdk-base AS aom-builder
+# ADD https://aomedia.googlesource.com/aom /src
+# ENV AOM_BRANCH=master
+# ADD https://github.com/ffmpegwasm/aom/#$AOM_BRANCH /src
+RUN apt-get update && apt-get install -y git
+RUN git clone -b v3.10.0 https://aomedia.googlesource.com/aom /src
+# RUN git clone https://github.com/ffmpegwasm/aom.git /src
+COPY build/aom.sh /src/build.sh
+RUN bash -x /src/build.sh
 
 # Base ffmpeg image with dependencies and source code populated.
 FROM emsdk-base AS ffmpeg-base
 ADD https://github.com/FFmpeg/FFmpeg.git#$FFMPEG_VERSION /src
+COPY --from=aom-builder $INSTALL_DIR $INSTALL_DIR
 
 # Build ffmpeg
 FROM ffmpeg-base AS ffmpeg-builder
 COPY build/ffmpeg.sh /src/build.sh
 RUN bash -x /src/build.sh
-      
+
 
 # Build ffmpeg.wasm
 FROM ffmpeg-builder AS ffmpeg-wasm-builder
@@ -37,9 +48,13 @@ COPY src/c /src/src/c
 COPY src/js /src/src/js
 COPY build/ffmpeg-wasm.sh build.sh
 # libraries to link
+ENV FFMPEG_LIBS \
+      -laom
 RUN mkdir -p /src/dist/umd && bash -x /src/build.sh \
+      ${FFMPEG_LIBS} \
       -o dist/umd/ffmpeg-core.js
 RUN mkdir -p /src/dist/esm && bash -x /src/build.sh \
+      ${FFMPEG_LIBS} \
       -sEXPORT_ES6 \
       -o dist/esm/ffmpeg-core.js
 

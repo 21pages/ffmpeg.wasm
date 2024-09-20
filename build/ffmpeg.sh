@@ -53,7 +53,9 @@ CONF_FLAGS=(
   --enable-decoder=hevc
   --enable-decoder=vp8
   --enable-decoder=vp9
-  --enable-decoder=av1
+
+  --enable-libaom
+  --enable-decoder=libaom_av1
 
   # disable thread when FFMPEG_ST is NOT defined
   ${FFMPEG_ST:+ --disable-pthreads --disable-w32threads --disable-os2threads}

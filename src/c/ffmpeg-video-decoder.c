@@ -84,7 +84,7 @@ static int reset(FFmpegDecoder *d) {
       name = "vp9";
       break;
     case AV1:
-      name = "av1";
+      name = "libaom-av1";
       break;
     case H264:
       name = "h264";
