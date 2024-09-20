@@ -8,7 +8,7 @@ ARG FFMPEG_ST
 ARG FFMPEG_MT
 ENV INSTALL_DIR=/opt
 # We cannot upgrade to n6.0 as ffmpeg bin only supports multithread at the moment.
-ENV FFMPEG_VERSION=n5.1.4
+ENV FFMPEG_VERSION=n7.0.2
 ENV CFLAGS="-I$INSTALL_DIR/include $CFLAGS $EXTRA_CFLAGS"
 ENV CXXFLAGS="$CFLAGS"
 ENV LDFLAGS="-L$INSTALL_DIR/lib $LDFLAGS $CFLAGS $EXTRA_LDFLAGS"
@@ -29,7 +29,7 @@ ADD https://github.com/FFmpeg/FFmpeg.git#$FFMPEG_VERSION /src
 FROM ffmpeg-base AS ffmpeg-builder
 COPY build/ffmpeg.sh /src/build.sh
 RUN bash -x /src/build.sh
-      
+
 
 # Build ffmpeg.wasm
 FROM ffmpeg-builder AS ffmpeg-wasm-builder
