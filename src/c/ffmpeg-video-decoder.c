@@ -32,6 +32,8 @@ enum CodecIndex {
 typedef struct FFmpegDecoder {
   AVCodecContext *c_;
   struct SwsContext *sws_;
+  int last_sws_width_; 
+  int last_sws_height_;
   AVPacket *pkt_;
   AVFrame *yuv_frame_;
   AVFrame *bgra_frame_;
@@ -52,6 +54,8 @@ static void free_decoder_fields(FFmpegDecoder *d) {
   d->pkt_ = NULL;
   d->c_ = NULL;
   d->sws_ = NULL;
+  d->last_sws_width_ = 0;
+  d->last_sws_height_ = 0;
 }
 
 static int get_thread_count() {
@@ -171,6 +175,16 @@ static int prepare_convert() {
   int ret = 0;
   int width = d->yuv_frame_->width;
   int height = d->yuv_frame_->height;
+  if (d->sws_) {
+    if (d->last_sws_width_ != width || d->last_sws_height_ != height) {
+      printf("free swsContext, size changed, w: %d->%d, h: %d->%d\n", d->last_sws_width_ , width,
+             d->last_sws_height_, height);
+      sws_freeContext(d->sws_);
+      d->sws_ = NULL;
+      d->last_sws_width_ = 0;
+      d->last_sws_height_ = 0;
+    }
+  }
   if (!d->sws_) {
     printf("sws_getContext, format:%d, width:%d, height:%d\n",
            d->yuv_frame_->format, d->yuv_frame_->width, d->yuv_frame_->height);
@@ -180,6 +194,16 @@ static int prepare_convert() {
     if (!d->sws_) {
       printf("sws_getContext failed\n");
       return -1;
+    }
+    d->last_sws_width_ = width;
+    d->last_sws_height_ = height;
+  }
+  if (d->bgra_frame_) {
+    if (d->bgra_frame_->width != width || d->bgra_frame_->height != height) {
+      printf("free bgra_frame, size changed, w: %d->%d, h: %d->%d\n",
+             d->bgra_frame_->width, width, d->bgra_frame_->height, height);
+      av_frame_free(&d->bgra_frame_);
+      d->bgra_frame_ = NULL;
     }
   }
   if (!d->bgra_frame_) {
