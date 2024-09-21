@@ -69,6 +69,7 @@ static int get_thread_count() {
   } else if (cores > max_cores) {
     cores = max_cores;
   }
+  printf("thread count: %d\n", cores);
   return cores;
 #else
   return 1;

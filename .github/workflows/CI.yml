@@ -36,7 +36,7 @@ jobs:
         name: ffmpeg-core
         path: packages/core/dist/*
   build-core-mt:
-    if: false
+    # if: false
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Source Code

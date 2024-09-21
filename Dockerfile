@@ -22,12 +22,8 @@ RUN apt-get update && \
 
 # Build aom
 FROM emsdk-base AS aom-builder
-# ADD https://aomedia.googlesource.com/aom /src
-# ENV AOM_BRANCH=master
-# ADD https://github.com/ffmpegwasm/aom/#$AOM_BRANCH /src
 RUN apt-get update && apt-get install -y git
 RUN git clone -b v3.10.0 https://aomedia.googlesource.com/aom /src
-# RUN git clone https://github.com/ffmpegwasm/aom.git /src
 COPY build/aom.sh /src/build.sh
 RUN bash -x /src/build.sh
 
