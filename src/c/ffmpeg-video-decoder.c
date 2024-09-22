@@ -34,6 +34,7 @@ typedef struct FFmpegDecoder {
   struct SwsContext *sws_;
   int last_sws_width_; 
   int last_sws_height_;
+  int last_sws_format_;
   AVPacket *pkt_;
   AVFrame *yuv_frame_;
   AVFrame *bgra_frame_;
@@ -56,6 +57,7 @@ static void free_decoder_fields(FFmpegDecoder *d) {
   d->sws_ = NULL;
   d->last_sws_width_ = 0;
   d->last_sws_height_ = 0;
+  d->last_sws_format_ = -1;
 }
 
 static int get_thread_count() {
@@ -176,14 +178,16 @@ static int prepare_convert() {
   int ret = 0;
   int width = d->yuv_frame_->width;
   int height = d->yuv_frame_->height;
+  int yuv_format = d->yuv_frame_->format;
   if (d->sws_) {
-    if (d->last_sws_width_ != width || d->last_sws_height_ != height) {
-      printf("free swsContext, size changed, w: %d->%d, h: %d->%d\n", d->last_sws_width_ , width,
-             d->last_sws_height_, height);
+    if (d->last_sws_width_ != width || d->last_sws_height_ != height || d->last_sws_format_ != yuv_format) {
+      printf("free swsContext, size changed, w: %d->%d, h: %d->%d, fmt: %d->%d\n", d->last_sws_width_ , width,
+             d->last_sws_height_, height, d->last_sws_format_, yuv_format);
       sws_freeContext(d->sws_);
       d->sws_ = NULL;
       d->last_sws_width_ = 0;
       d->last_sws_height_ = 0;
+      d->last_sws_format_ = -1;
     }
   }
   if (!d->sws_) {
@@ -198,6 +202,7 @@ static int prepare_convert() {
     }
     d->last_sws_width_ = width;
     d->last_sws_height_ = height;
+    d->last_sws_format_ = yuv_format;
   }
   if (d->bgra_frame_) {
     if (d->bgra_frame_->width != width || d->bgra_frame_->height != height) {
