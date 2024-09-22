@@ -13,9 +13,6 @@ Module['frameBuffer'] = null;
 
 // - public methods
 
-
-
-
 /**
  * Decode the given video data packet; fills out the frameBuffer property on success
  * 
@@ -41,7 +38,4 @@ Module['processFrame'] = function(codec, data, callback) {
 Module['close'] = function() {
 	Module['_ffmpeg_destroy_decoder']();
 };
-
-
-
 

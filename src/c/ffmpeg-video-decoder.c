@@ -18,7 +18,7 @@
 #include <pthread.h>
 #endif
 
-extern void ffmpeg_decode_callback(uint8_t *data, int width, int height);
+extern void ffmpeg_decode_callback(uint8_t *data, int width, int height, int yuv_format);
 
 enum CodecIndex {
   VP8 = 0,
@@ -267,6 +267,6 @@ int ffmpeg_decode(const int codec, const uint8_t *data, const int length) {
     return -1;
   }
   ffmpeg_decode_callback(d->bgra_frame_->data[0], d->bgra_frame_->width,
-                         d->bgra_frame_->height);
+                         d->bgra_frame_->height, d->yuv_frame_->format);
   return 0;
 }
