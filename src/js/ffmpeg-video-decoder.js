@@ -30,6 +30,7 @@ Module['processFrame'] = function(codec, data, callback) {
 	var ret = Module['_ffmpeg_decode'](codec, buffer, len);
 	Module['_free'](buffer);
 	callback(ret);
+	return ret;
 };
 
 /**
