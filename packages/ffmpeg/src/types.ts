@@ -1,5 +1,3 @@
-export type FFFSPath = string;
-
 /**
  * ffmpeg-core loading configuration.
  */
@@ -32,94 +30,13 @@ export interface FFMessageLoadConfig {
   classWorkerURL?: string;
 }
 
-export interface FFMessageExecData {
-  args: string[];
-  timeout?: number;
+export interface FFMessageDecodePara {
+  codec: number;
+  data: Uint8Array;
 }
-
-export interface FFMessageWriteFileData {
-  path: FFFSPath;
-  data: FileData;
-}
-
-export interface FFMessageReadFileData {
-  path: FFFSPath;
-  encoding: string;
-}
-
-export interface FFMessageDeleteFileData {
-  path: FFFSPath;
-}
-
-export interface FFMessageRenameData {
-  oldPath: FFFSPath;
-  newPath: FFFSPath;
-}
-
-export interface FFMessageCreateDirData {
-  path: FFFSPath;
-}
-
-export interface FFMessageListDirData {
-  path: FFFSPath;
-}
-
-/**
- * @remarks
- * Only deletes empty directory.
- */
-export interface FFMessageDeleteDirData {
-  path: FFFSPath;
-}
-
-export enum FFFSType {
-  MEMFS = "MEMFS",
-  NODEFS = "NODEFS",
-  NODERAWFS = "NODERAWFS",
-  IDBFS  = "IDBFS",
-  WORKERFS = "WORKERFS",
-  PROXYFS = "PROXYFS",
-}
-
-export type WorkerFSFileEntry =
-  | File;
-
-export interface WorkerFSBlobEntry {
-  name: string;
-  data: Blob;
-}
-
-export interface WorkerFSMountData {
-  blobs?: WorkerFSBlobEntry[];
-  files?: WorkerFSFileEntry[];
-}
-
-export type FFFSMountOptions =
-  | WorkerFSMountData;
-
-export interface FFMessageMountData {
-  fsType: FFFSType;
-  options: FFFSMountOptions;
-  mountPoint: FFFSPath;
-}
-
-export interface FFMessageUnmountData {
-  mountPoint: FFFSPath;
-}
-
 export type FFMessageData =
   | FFMessageLoadConfig
-  | FFMessageExecData
-  | FFMessageWriteFileData
-  | FFMessageReadFileData
-  | FFMessageDeleteFileData
-  | FFMessageRenameData
-  | FFMessageCreateDirData
-  | FFMessageListDirData
-  | FFMessageDeleteDirData
-  | FFMessageMountData
-  | FFMessageUnmountData;
-
+   | FFMessageDecodePara
 export interface Message {
   type: string;
   data?: FFMessageData;
@@ -133,19 +50,8 @@ export interface FFMessageEvent extends MessageEvent {
   data: FFMessage;
 }
 
-export interface LogEvent {
-  type: string;
-  message: string;
-}
-
-export interface ProgressEvent {
-  progress: number;
-  time: number;
-}
-
 export type ExitCode = number;
 export type ErrorMessage = string;
-export type FileData = Uint8Array | string;
 export type IsFirst = boolean;
 export type OK = boolean;
 
@@ -154,24 +60,11 @@ export interface FSNode {
   isDir: boolean;
 }
 
-export type CallbackData =
-  | FileData
-  | ExitCode
-  | ErrorMessage
-  | LogEvent
-  | ProgressEvent
-  | IsFirst
-  | OK // eslint-disable-line
-  | Error
-  | FSNode[]
-  | undefined;
+export type CallbackData = number | IsFirst |  object;
 
 export interface Callbacks {
   [id: number | string]: (data: CallbackData) => void;
 }
-
-export type LogEventCallback = (event: LogEvent) => void;
-export type ProgressEventCallback = (event: ProgressEvent) => void;
 
 export interface FFMessageEventCallback {
   data: {
