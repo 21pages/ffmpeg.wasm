@@ -250,8 +250,8 @@ int ffmpeg_decode(const int codec, const uint8_t *data, const int length) {
     }
   }
   if (d->codec_ != codec) {
-    d->codec_ = codec;
     printf("codec changed, %d -> %d\n", d->codec_, codec);
+    d->codec_ = codec;
     if (reset(d) != 0) {
       return -1;
     }
