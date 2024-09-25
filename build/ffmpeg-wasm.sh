@@ -30,8 +30,7 @@ CONF_FLAGS=(
   -sEXPORTED_FUNCTIONS="`< src/js/ffmpeg-video-decoder-exports.json`" # exported functions
   #-sEXPORTED_RUNTIME_METHODS=$(node src/bind/ffmpeg/export-runtime.js) # exported built-in functions
   --js-library src/js/ffmpeg-video-decoder-library.js \
-  --pre-js src/js/ffmpeg-pre.js \
-  --post-js src/js/ffmpeg-video-decoder.js \
+  --pre-js src/js/ffmpeg-video-decoder.js \
   # ffmpeg source code
   src/c/ffmpeg-video-decoder.c
 )

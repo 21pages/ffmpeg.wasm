@@ -1,27 +1,18 @@
-/* global Module */
-/* global options */
-/* global ArrayBuffer */
-/* global wasmMemory */
-
-// - Properties
+/**
+ * Constants
+ */
 
 /**
- * Last-decoded video packet
- * @property object
+ * Variables
  */
+
 Module['frameBuffer'] = null;
 
-// - public methods
-
 /**
- * Decode the given video data packet; fills out the frameBuffer property on success
- * 
- * @param codec int codec index
- * @param ArrayBuffer data
- * @param function callback on completion
+ * Functions
  */
-Module['processFrame'] = function(codec, data, callback) {
 
+function _processFrame(codec, data, callback) {
 	// Map the ArrayBuffer into emscripten's runtime heap
 	var len = data.byteLength;
 	var buffer = Module['_malloc'](len);
@@ -33,12 +24,9 @@ Module['processFrame'] = function(codec, data, callback) {
 	return ret;
 };
 
-/**
- * Close out any resources required by the decoder module
- */
-Module['close'] = function() {
+function _close() {
 	Module['_ffmpeg_destroy_decoder']();
-};
+}
 
 /**
  * In multithread version of ffmpeg.wasm, the bootstrap process is like:
@@ -60,15 +48,18 @@ Module['close'] = function() {
  * Thus, we can successfully extract custom URLs using _locateFile funciton.
  */
 function _locateFile(path, prefix) {
-const mainScriptUrlOrBlob = Module["mainScriptUrlOrBlob"];
-if (mainScriptUrlOrBlob) {
-	const { wasmURL, workerURL } = JSON.parse(
-	atob(mainScriptUrlOrBlob.slice(mainScriptUrlOrBlob.lastIndexOf("#") + 1))
-	);
-	if (path.endsWith(".wasm")) return wasmURL;
-	if (path.endsWith(".worker.js")) return workerURL;
+	const mainScriptUrlOrBlob = Module["mainScriptUrlOrBlob"];
+	if (mainScriptUrlOrBlob) {
+		const { wasmURL, workerURL } = JSON.parse(
+		atob(mainScriptUrlOrBlob.slice(mainScriptUrlOrBlob.lastIndexOf("#") + 1))
+		);
+		if (path.endsWith(".wasm")) return wasmURL;
+		if (path.endsWith(".worker.js")) return workerURL;
+	}
+	return prefix + path;
 }
-return prefix + path;
-}
-  
+	
 Module["locateFile"] = _locateFile;
+Module['processFrame'] = _processFrame;
+Module['close'] = _close;
+
