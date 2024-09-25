@@ -7,6 +7,7 @@
  */
 
 Module['frameBuffer'] = null;
+Module['recycledFrames'] = [];
 
 /**
  * Functions
@@ -22,6 +23,14 @@ function _processFrame(codec, data, callback) {
 	Module['_free'](buffer);
 	callback(ret);
 	return ret;
+};
+
+function _recycleFrame(frame) {
+	var arr = Module['recycledFrames'];
+	arr.push(frame);
+	if (arr.length > 4) {
+		arr.shift();
+	}
 };
 
 function _close() {
@@ -61,5 +70,6 @@ function _locateFile(path, prefix) {
 	
 Module["locateFile"] = _locateFile;
 Module['processFrame'] = _processFrame;
+Module['recycleFrame'] = _recycleFrame;
 Module['close'] = _close;
 
