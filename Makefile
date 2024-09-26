@@ -7,6 +7,7 @@ DEV_ARGS := --progress=plain
 DEV_CFLAGS := --profiling
 DEV_MT_CFLAGS := $(DEV_CFLAGS) $(MT_FLAGS)
 PROD_CFLAGS := -O3 -msimd128
+PROD_CFLAGS_NO_SIMD := -O3
 PROD_MT_CFLAGS := $(PROD_CFLAGS) $(MT_FLAGS)
 
 clean:
@@ -32,6 +33,11 @@ build-st:
 	make build \
 		FFMPEG_ST=yes
 
+build-st-no-simd:
+	make build \
+		PKG_SUFFIX=-no-simd \
+		FFMPEG_ST=yes
+
 build-mt:
 	make build \
 		PKG_SUFFIX=-mt \
@@ -45,6 +51,9 @@ dev-mt:
 
 prd:
 	make build-st EXTRA_CFLAGS="$(PROD_CFLAGS)"
+
+prd-no-simd:
+	make build-st-no-simd EXTRA_CFLAGS="$(PROD_CFLAGS_NO_SIMD)"
 
 prd-mt:
 	make build-mt EXTRA_CFLAGS="$(PROD_MT_CFLAGS)"
