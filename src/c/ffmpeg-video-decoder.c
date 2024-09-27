@@ -5,6 +5,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <time.h>
+
 //
 #include <libavcodec/avcodec.h>
 #include <libavutil/log.h>
@@ -264,14 +266,18 @@ int ffmpeg_decode(const int codec, const uint8_t *data, const int length) {
     printf("prepare_convert failed\n");
     return -1;
   }
+  clock_t start_time = clock();
   ret = sws_scale(d->sws_, d->yuv_frame_->data, d->yuv_frame_->linesize, 0,
                   d->yuv_frame_->height, d->bgra_frame_->data,
                   d->bgra_frame_->linesize);
+
   if (ret < 0) {
     printf("sws_scale failed, err=%s\n", av_err2str(ret));
     return -1;
   }
+  printf("sws_scale: %.2fms\n", (double)(clock() - start_time) / CLOCKS_PER_SEC * 1000.0);
   ffmpeg_decode_callback(d->bgra_frame_->data[0], d->bgra_frame_->width,
                          d->bgra_frame_->height, d->yuv_frame_->format);
+  printf("sws_scale + callback: %.2fms\n", (double)(clock() - start_time) / CLOCKS_PER_SEC * 1000.0);
   return 0;
 }
