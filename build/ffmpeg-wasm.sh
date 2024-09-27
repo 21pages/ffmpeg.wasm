@@ -21,7 +21,7 @@ CONF_FLAGS=(
   -Wno-deprecated-declarations 
   $LDFLAGS 
   -sWASM_BIGINT                            # enable big int support
-  -sMODULARIZE                             # modularized to use as a library
+  #-sMODULARIZE                             # modularized to use as a library
   -sNO_FILESYSTEM
   ${FFMPEG_MT:+ -sINITIAL_MEMORY=1024MB}   # ALLOW_MEMORY_GROWTH is not recommended when using threads, thus we use a large initial memory
   ${FFMPEG_MT:+ -sPTHREAD_POOL_SIZE=32}    # use 32 threads
