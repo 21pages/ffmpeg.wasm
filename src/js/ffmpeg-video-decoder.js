@@ -28,7 +28,7 @@ function _processFrame(codec, data, callback) {
 function _recycleFrame(frame) {
 	var arr = Module['recycledFrames'];
 	arr.push(frame);
-	if (arr.length > 4) {
+	if (arr.length > 8) {
 		arr.shift();
 	}
 };

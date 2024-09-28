@@ -7,7 +7,7 @@ mergeInto(LibraryManager.library, {
 	ffmpeg_decode_callback: function(data, width, height, yuvFormat) {
 		var recycled = Module['recycledFrames'];
 		var array = null;
-		const len = width * height * 4;
+		const len = width * height * 8;
 		while(recycled.length > 0) {
 			var frame = recycled.pop();
 			if (frame.length === len) {
